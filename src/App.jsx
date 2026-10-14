@@ -20,6 +20,8 @@ function App() {
   const [filtered, setFiltered] = useState(PRODUCTS);
   const [aiReply, setAiReply] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [addedId, setAddedId] = useState(null);
 
   const getAIRecommendation = async () => {
     if (!query) return alert("Please type your preference!");
@@ -56,10 +58,11 @@ function App() {
       const priceMatch = q.match(/(\d{2,4})/);
       const priceValue = priceMatch? parseInt(priceMatch[1]) : null;
 
+      // ABOVE, BELOW, UNDER LOGIC
       if (priceValue) {
-        if (q.includes("above") || q.includes("over") || q.includes(">") || q.includes("more than") || q.includes("greater")) {
+        if (q.includes("above") || q.includes("over") || q.includes(">") || q.includes("more than") || q.includes("greater") || q.includes("upar")) {
           result = result.filter(p => p.price >= priceValue);
-        } else if (q.includes("under") || q.includes("below") || q.includes("<") || q.includes("less")) {
+        } else if (q.includes("under") || q.includes("below") || q.includes("<") || q.includes("less") || q.includes("sasta") || q.includes("kam")) {
           result = result.filter(p => p.price <= priceValue);
         }
       }
@@ -76,6 +79,20 @@ function App() {
     }, 600);
   };
 
+  // ENTER BUTTON LOGIC
+  const handleEnterKey = (e) => {
+    if (e.key === 'Enter') {
+      getAIRecommendation();
+    }
+  };
+
+  // ADD TO CART CLICKABLE LOGIC
+  const handleAddToCart = (product) => {
+    setCart([...cart, product]);
+    setAddedId(product.id);
+    setTimeout(() => setAddedId(null), 1500);
+  };
+
   const resetAll = () => { setFiltered(PRODUCTS); setQuery(""); setAiReply(""); }
 
   return (
@@ -83,27 +100,35 @@ function App() {
       <style>{`
         * { box-sizing: border-box; }
         body { margin: 0; overflow-x: hidden; }
-    .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.2)!important; }
-    .card { transition: all 0.3s ease; }
-    .search-box { display: flex; gap: 10px; justify-content: center; background: white; padding: 14px; border-radius: 16px; max-width: 800px; width: 100%; margin: 0 auto 25px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-    .search-box input { min-width: 0; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.2)!important; }
+  .card { transition: all 0.3s ease; }
+  .search-box { display: flex; gap: 10px; justify-content: center; background: white; padding: 14px; border-radius: 16px; max-width: 800px; width: 100%; margin: 0 auto 25px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+  .search-box input { min-width: 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
         @media (max-width: 600px) {
-      .search-box { flex-direction: column; padding: 12px; width: 100%; max-width: 100%; margin-left: auto; margin-right: auto; }
-      .search-box input { width: 100%!important; flex: none; }
-      .search-box button { width: 100%!important; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-      .title { font-size: 22px!important; padding: 0 10px; }
+    .search-box { flex-direction: column; padding: 12px; width: 100%; max-width: 100%; margin-left: auto; margin-right: auto; }
+    .search-box input { width: 100%!important; flex: none; }
+    .search-box button { width: 100%!important; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .title { font-size: 22px!important; padding: 0 10px; }
         }
       `}</style>
 
       <div style={{ maxWidth: "1250px", margin: "auto", width: "100%" }}>
-        <h1 className="title" style={{ textAlign: "center", marginBottom: "25px", fontWeight: "900", color: "#fff", fontSize: "36px", lineHeight: "1.3", textShadow: "0 2px 10px rgba(0,0,0,0.2)", wordWrap: "break-word" }}>
-          🛒 AI Product Recommendation System
-        </h1>
+        {/* HEADER FIX - Title clean, Cart alag badge me */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: "25px", gap: "10px" }}>
+          <h1 className="title" style={{ textAlign: "center", margin: 0, fontWeight: "900", color: "#fff", fontSize: "36px", lineHeight: "1.3", textShadow: "0 2px 10px rgba(0,0,0,0.2)" }}>
+            🛒 AI Product Recommendation System
+          </h1>
+          {cart.length > 0 && (
+            <div style={{ background: "white", padding: "6px 16px", borderRadius: "30px", fontWeight: "800", color: "#6a11cb", boxShadow: "0 4px 10px rgba(0,0,0,0.2)" }}>
+              🛒 Cart: {cart.length} items
+            </div>
+          )}
+        </div>
 
         <div className="search-box">
-          <input value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && getAIRecommendation()} placeholder="🔍 e.g. laptop above 800, phone under 500" style={{ padding: "14px 16px", flex: 1, borderRadius: "12px", border: "2px solid #eee", outline: "none", fontSize: "15px", background: "#f9f9ff" }} />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={handleEnterKey} placeholder="🔍 e.g. laptop above 800, phone under 500" style={{ padding: "14px 16px", flex: 1, borderRadius: "12px", border: "2px solid #eee", outline: "none", fontSize: "15px", background: "#f9f9ff" }} />
           <button onClick={getAIRecommendation} style={{ padding: "14px 26px", background: "linear-gradient(90deg, #6a11cb, #2575fc)", color: "#fff", borderRadius: "12px", border: "none", cursor: "pointer", fontWeight: "800", boxShadow: "0 4px 12px rgba(37,117,252,0.3)", whiteSpace: "nowrap" }}>
             {loading? "Thinking..." : "Ask AI ✨"}
           </button>
@@ -125,7 +150,9 @@ function App() {
                 <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", fontWeight: "800", color: "#222" }}>{p.name}</h3>
                 <p style={{ fontSize: "13px", color: "#777", margin: "0" }}>{p.desc}</p>
                 <p style={{ margin: "8px 0", fontWeight: "bold" }}><span style={{ fontSize: "20px", color: "#2575fc" }}>${p.price}</span></p>
-                <button style={{ background: "linear-gradient(90deg, #111, #333)", color: "#fff", border: "none", padding: "11px 12px", borderRadius: "12px", cursor: "pointer", width: "100%", marginTop: "auto", fontWeight: "800", letterSpacing: "0.5px" }}>🛒 Add to Cart</button>
+                <button onClick={() => handleAddToCart(p)} style={{ background: addedId === p.id? "linear-gradient(90deg, #00c853, #009624)" : "linear-gradient(90deg, #111, #333)", color: "#fff", border: "none", padding: "11px 12px", borderRadius: "12px", cursor: "pointer", width: "100%", marginTop: "auto", fontWeight: "800", letterSpacing: "0.5px" }}>
+                  {addedId === p.id? "✓ Added!" : "🛒 Add to Cart"}
+                </button>
               </div>
             </div>
           ))}
