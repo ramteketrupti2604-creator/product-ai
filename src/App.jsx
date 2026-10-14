@@ -5,7 +5,7 @@ const PRODUCTS = [
   { id: 2, name: "Samsung Galaxy M32", category: "Phone", price: 299, image: "https://fonezone.com/cdn/shop/files/Untitled_22_ca7efb5c-ce1c-4389-97eb-f1c18b0f1c6e_1000x.jpg?v=1764229253", desc: "Budget phone under $500" },
   { id: 3, name: "Redmi Note 12", category: "Phone", price: 199, image: "https://m.media-amazon.com/images/I/51ZCk7jqdTL.jpg", desc: "Value for money under $500" },
   { id: 4, name: "OnePlus 11R", category: "Phone", price: 450, image: "https://m.media-amazon.com/images/I/51PwtkkaV2L._SX679_.jpg", desc: "Flagship killer under $500" },
-  { id: 5, name: "MacBook Air M2", category: "Laptop", price: 999, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQhprMEPpuM1di-iWGa_1_Jq6rIQoPqG3tDRuEKmOgSzKnF9WSs-rx02YtNDOkTXxFcNl20A7i9k4HAHXfTirbh_AI4MDdGD2ls8V6sNF-AcBgtHdTRUREVrZA&usqp=CAc", desc: "Super fast laptop" },
+  { id: 5, name: "MacBook Air M2", category: "Laptop", price: 999, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQhprMEPpuM1di-iWGa_1_Jq6rIQoPqG3tDRuEKmOgSzKnF9WSs-rx02YtNDOkTXxFcNl20A7i9k4HAcBgtHdTRUREVrZA&usqp=CAc", desc: "Super fast laptop" },
   { id: 6, name: "HP Pavilion 14", category: "Laptop", price: 550, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400", desc: "Best for students" },
   { id: 7, name: "Dell XPS 13", category: "Laptop", price: 850, image: "https://static0.pocketlintimages.com/wordpress/wp-content/uploads/wm/2025/01/dell-xps-13-intel-core-ultra-series-2-header-image.jpg?w=1600&h=1600&fit=crop", desc: "Premium ultrabook" },
   { id: 8, name: "Lenovo IdeaPad", category: "Laptop", price: 400, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV285E-OnCxsDFkry0CPv0-qitMoMOt6k5cLA8CpMOIQ&s", desc: "Budget laptop under $500" },
@@ -83,16 +83,20 @@ function App() {
   return (
     <div style={{ fontFamily: "'Inter', Arial", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", minHeight: "100vh", padding: "20px" }}>
       <style>{`
+        * { box-sizing: border-box; }
         body { margin: 0; }
-  .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.2)!important; }
-  .card { transition: all 0.3s ease; }
-  .search-box { display: flex; gap: 10px; justify-content: center; background: white; padding: 14px; border-radius: 16px; max-width: 800px; margin: 0 auto 25px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-        @media (max-width: 600px) {
-    .search-box { flex-direction: column; padding: 12px; }
-    .search-box input { width: 100%!important; }
-    .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-    .title { font-size: 24px!important; }
+       .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.2)!important; }
+       .card { transition: all 0.3s ease; }
+       .search-box { display: flex; gap: 10px; justify-content: center; background: white; padding: 14px; border-radius: 16px; max-width: 800px; width: 100%; margin: 0 auto 25px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+       .search-box input { min-width: 0; }
+       .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        @media (max-width: 640px) {
+         .search-box { flex-direction: column; padding: 12px; width: 100%; }
+         .search-box input { width: 100%!important; }
+         .search-box button { width: 100%!important; }
+         .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+         .title { font-size: 20px!important; }
+         .card { height: auto!important; min-height: 340px; }
         }
       `}</style>
 
