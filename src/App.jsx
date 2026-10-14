@@ -29,7 +29,6 @@ function App() {
     const OPENAI_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
     if (OPENAI_KEY) {
-
       try {
         const prompt = `You are a product recommendation AI. User says: "${query}". From product list: ${JSON.stringify(PRODUCTS.map(p=>({id:p.id, name:p.name, category:p.category, price:p.price})))}. Return only matching product IDs as JSON array like [1,3,5]. Consider price conditions like above, under, below.`;
         const res = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -80,22 +79,25 @@ function App() {
   const resetAll = () => { setFiltered(PRODUCTS); setQuery(""); setAiReply(""); }
 
   return (
-    <div style={{ fontFamily: "'Inter', Arial", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", minHeight: "100vh", padding: "20px" }}>
+    <div style={{ fontFamily: "'Inter', Arial", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", minHeight: "100vh", padding: "20px", overflowX: "hidden" }}>
       <style>{`
-        body { margin: 0; }
-     .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.2)!important; }
-     .card { transition: all 0.3s ease; }
-     .search-box { display: flex; gap: 10px; justify-content: center; background: white; padding: 14px; border-radius: 16px; max-width: 800px; margin: 0 auto 25px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        * { box-sizing: border-box; }
+        body { margin: 0; overflow-x: hidden; }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.2)!important; }
+    .card { transition: all 0.3s ease; }
+    .search-box { display: flex; gap: 10px; justify-content: center; background: white; padding: 14px; border-radius: 16px; max-width: 800px; width: 100%; margin: 0 auto 25px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+    .search-box input { min-width: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
         @media (max-width: 600px) {
-       .search-box { flex-direction: column; padding: 12px; }
-       .search-box input { width: 100%!important; }
-       .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-       .title { font-size: 24px!important; }
+      .search-box { flex-direction: column; padding: 12px; width: 100%; max-width: 100%; margin-left: auto; margin-right: auto; }
+      .search-box input { width: 100%!important; flex: none; }
+      .search-box button { width: 100%!important; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+      .title { font-size: 22px!important; padding: 0 10px; }
         }
       `}</style>
 
-      <div style={{ maxWidth: "1250px", margin: "auto" }}>
+      <div style={{ maxWidth: "1250px", margin: "auto", width: "100%" }}>
         <h1 className="title" style={{ textAlign: "center", marginBottom: "25px", fontWeight: "900", color: "#fff", fontSize: "36px", lineHeight: "1.3", textShadow: "0 2px 10px rgba(0,0,0,0.2)", wordWrap: "break-word" }}>
           🛒 AI Product Recommendation System
         </h1>
